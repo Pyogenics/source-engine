@@ -113,6 +113,13 @@ projects={
 		'unittests/mathlibtest',
 		'utils/unittest'
 	],
+	'hammer': [
+		'appframework',
+		'hammer_launcher',
+		'tier0',
+		'tier1',
+		'vstdlib'
+	],
 	'dedicated': [
 		'appframework',
 		'bitmap',
@@ -177,6 +184,7 @@ def run_test(self, fragment, msg):
 	return False if result == None else True
 
 def define_platform(conf):
+	conf.env.HAMMER = conf.options.HAMMER
 	conf.env.DEDICATED = conf.options.DEDICATED
 	conf.env.TESTS = conf.options.TESTS
 	conf.env.TOGLES = conf.options.TOGLES
@@ -287,6 +295,9 @@ def options(opt):
 
 	grp.add_option('-4', '--32bits', action = 'store_true', dest = 'TARGET32', default = False,
 		help = 'allow targetting 32-bit engine(Linux/Windows/OSX x86 only) [default: %default]')
+
+	grp.add_option('--hammer', action = 'store_true', dest = 'HAMMER', default = False,
+		help = 'build hammer editor [default: %default]')
 
 	grp.add_option('-d', '--dedicated', action = 'store_true', dest = 'DEDICATED', default = False,
 		help = 'build dedicated server [default: %default]')
@@ -619,6 +630,8 @@ def configure(conf):
 
 	if conf.options.TESTS:
 		conf.add_subproject(projects['tests'])
+	elif conf.options.HAMMER:
+		conf.add_subproject(projects['hammer'])
 	elif conf.options.DEDICATED:
 		conf.add_subproject(projects['dedicated'])
 	else:
@@ -641,6 +654,8 @@ def build(bld):
 
 	if bld.env.TESTS:
 		bld.add_subproject(projects['tests'])
+	elif bld.env.HAMMER:
+		bld.add_subproject(projects['hammer'])	
 	elif bld.env.DEDICATED:
 		bld.add_subproject(projects['dedicated'])
 	else:
