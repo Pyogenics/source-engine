@@ -1,0 +1,41 @@
+#! /usr/bin/env python
+# encoding: utf-8
+
+from waflib import Utils
+import os
+
+top = '.'
+PROJECT_NAME = 'hammer_dll'
+
+def options(opt):
+	# stub
+	return
+
+def configure(conf):
+	conf.define('CFLAGS', conf.env.CFLAGS)
+	conf.define('LDFLAGS', conf.env.LINKFLAGS)
+
+def build(bld):
+	source = [
+	]
+
+	includes = [
+	]	
+
+	defines = []
+
+	libs = []
+
+	install_path = bld.env.LIBDIR
+	bld.shlib(
+		source   = source,
+		target   = PROJECT_NAME,
+		name     = PROJECT_NAME,
+		features = 'c cxx cxxprogram',
+		includes = includes,
+		defines  = defines,
+		use      = libs,
+		install_path = install_path,
+		subsystem = bld.env.MSVC_SUBSYSTEM,
+		idx      = bld.get_taskgen_count()
+	)
