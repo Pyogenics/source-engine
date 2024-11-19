@@ -4,10 +4,15 @@
 //
 //===========================================================================//
 
+#include "vcrmode.h"
+#ifdef _WIN32
 #include <windows.h>
 #include <eh.h>
+#endif
+
+#include "platform.h"
 #include "appframework/AppFramework.h"
-#include "ihammer.h"
+#include "IHammer.h"
 #include "tier0/dbg.h"
 #include "vstdlib/cvar.h"
 #include "filesystem.h"
@@ -17,7 +22,7 @@
 #include "datacache/idatacache.h"
 #include "datacache/imdlcache.h"
 #include "vphysics_interface.h"
-#include "vgui/ivgui.h"
+#include "vgui/IVGui.h"
 #include "vgui/ISurface.h"
 #include "inputsystem/iinputsystem.h"
 #include "tier0/icommandline.h"
@@ -49,13 +54,7 @@ private:
 	int	MainLoop();
 };
 
-
-//-----------------------------------------------------------------------------
-// Define the application object
-//-----------------------------------------------------------------------------
 CHammerApp	g_ApplicationObject;
-DEFINE_WINDOWED_APPLICATION_OBJECT_GLOBALVAR( g_ApplicationObject );
-
 
 //-----------------------------------------------------------------------------
 // Create all singleton systems
@@ -85,16 +84,16 @@ bool CHammerApp::Create( )
 
 	AppSystemInfo_t appSystems[] = 
 	{
-		{ "materialsystem.dll",		MATERIAL_SYSTEM_INTERFACE_VERSION },
-		{ "inputsystem.dll",		INPUTSYSTEM_INTERFACE_VERSION },
-		{ "studiorender.dll",		STUDIO_RENDER_INTERFACE_VERSION },
-		{ "vphysics.dll",			VPHYSICS_INTERFACE_VERSION },
-		{ "datacache.dll",			DATACACHE_INTERFACE_VERSION },
-		{ "datacache.dll",			MDLCACHE_INTERFACE_VERSION },
-		{ "datacache.dll",			STUDIO_DATA_CACHE_INTERFACE_VERSION },
-		{ "vguimatsurface.dll",		VGUI_SURFACE_INTERFACE_VERSION },
-		{ "vgui2.dll",				VGUI_IVGUI_INTERFACE_VERSION },
-		{ "hammer_dll.dll",			INTERFACEVERSION_HAMMER },
+		{ "materialsystem" DLL_EXT_STRING,		MATERIAL_SYSTEM_INTERFACE_VERSION },
+		{ "inputsystem" DLL_EXT_STRING,		INPUTSYSTEM_INTERFACE_VERSION },
+		{ "studiorender" DLL_EXT_STRING,		STUDIO_RENDER_INTERFACE_VERSION },
+		{ "vphysics" DLL_EXT_STRING,			VPHYSICS_INTERFACE_VERSION },
+		{ "datacache" DLL_EXT_STRING,			DATACACHE_INTERFACE_VERSION },
+		{ "datacache" DLL_EXT_STRING,			MDLCACHE_INTERFACE_VERSION },
+		{ "datacache" DLL_EXT_STRING,			STUDIO_DATA_CACHE_INTERFACE_VERSION },
+		{ "vguimatsurface" DLL_EXT_STRING,		VGUI_SURFACE_INTERFACE_VERSION },
+		{ "vgui2" DLL_EXT_STRING,				VGUI_IVGUI_INTERFACE_VERSION },
+		{ "hammer_dll" DLL_EXT_STRING,			INTERFACEVERSION_HAMMER },
 		{ "", "" }	// Required to terminate the list
 	};
 
@@ -104,7 +103,7 @@ bool CHammerApp::Create( )
 	// Add Perforce separately since it's possible it isn't there. (SDK)
 	if ( !CommandLine()->CheckParm( "-nop4" ) )
 	{
-		AppModule_t p4Module = LoadModule( "p4lib.dll" );
+		AppModule_t p4Module = LoadModule( "p4lib" DLL_EXT_STRING );
 		AddSystem( p4Module, P4_INTERFACE_VERSION );
 	}
 	// Connect to interfaces loaded in AddSystems that we need locally
@@ -114,7 +113,7 @@ bool CHammerApp::Create( )
 	g_pInputSystem = (IInputSystem*)FindSystem( INPUTSYSTEM_INTERFACE_VERSION );
 
 	// This has to be done before connection.
-	g_pMaterialSystem->SetShaderAPI( "shaderapidx9.dll" );
+	g_pMaterialSystem->SetShaderAPI( "shaderapidx9" DLL_EXT_STRING );
 
 	return true;
 }
@@ -139,7 +138,9 @@ SpewRetval_t HammerSpewFunc( SpewType_t type, tchar const *pMsg )
 	}
 	else if( type == SPEW_ERROR )
 	{
+		#ifdef _WIN32
 		MessageBox( NULL, pMsg, "Hammer Error", MB_OK | MB_ICONSTOP );
+		#endif
 		return SPEW_ABORT;
 	}
 	else
@@ -192,7 +193,18 @@ int CHammerApp::Main( )
 	return g_pHammer->MainLoop();
 }
 
+//-----------------------------------------------------------------------------
+// application launcher
+//-----------------------------------------------------------------------------
+int main( int argc, char** argv)
+{
+#ifdef WIN32
+	#error "Windows build are not supported yet"	
+#endif
+	// Setup command line stuff
+	Plat_SetCommandLine( BuildCmdLine(argc, argv, false) );
+	CommandLine()->CreateCmdLine(argc, argv);
 
-
-
-
+	// Run the application
+	return g_ApplicationObject.Run();
+}
