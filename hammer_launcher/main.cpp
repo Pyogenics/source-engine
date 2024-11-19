@@ -196,14 +196,20 @@ int CHammerApp::Main( )
 //-----------------------------------------------------------------------------
 // application launcher
 //-----------------------------------------------------------------------------
-int main( int argc, char** argv)
-{
 #ifdef WIN32
-	#error "Windows build are not supported yet"	
+DLL_EXPORT int WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow )
+#else
+DLL_EXPORT int main( int argc, char **argv )
 #endif
+{
 	// Setup command line stuff
-	Plat_SetCommandLine( BuildCmdLine(argc, argv, false) );
-	CommandLine()->CreateCmdLine(argc, argv);
+#ifdef WIN32
+	SetAppInstance( hInstance );
+	CommandLine()->CreateCmdLine( VCRHook_GetCommandLine() );
+#else
+	Plat_SetCommandLine( BuildCmdLine( argc, argv, false ) );
+	CommandLine()->CreateCmdLine( argc, argv );
+#endif // WIN32
 
 	// Run the application
 	return g_ApplicationObject.Run();

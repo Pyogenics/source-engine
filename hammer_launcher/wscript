@@ -30,7 +30,7 @@ def build(bld):
 
 	libs = ['appframework', 'tier0', 'tier1', 'vstdlib']
 
-	install_path = bld.env.BINDIR
+	install_path = bld.env.LIBDIR
 	bld(
 		source   = source,
 		target   = PROJECT_NAME,
