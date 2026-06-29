@@ -146,6 +146,45 @@ projects={
 		'vstdlib',
 		'vtf',
 		'stub_steam'
+	],
+	'hammer': [
+		'appframework',
+		'bitmap',
+		'choreoobjects',
+		'datacache',
+		'datamodel',
+		'dmxloader',
+		'fgdlib',
+		'filesystem',
+		'hammer_launcher',
+		'hammer',
+		'inputsystem',
+		'ivp/havana',
+		'ivp/havana/havok/hk_base',
+		'ivp/havana/havok/hk_math',
+		'ivp/ivp_compact_builder',
+		'ivp/ivp_physics',
+		'materialsystem',
+		'materialsystem/shaderapidx9',
+		'materialsystem/shaderlib',
+		'materialsystem/stdshaders',
+		'mathlib',
+		'raytrace',
+		'studiorender',
+		'stub_steam',
+		'tier0',
+		'tier1',
+		'tier2',
+		'tier3',
+		'vgui2/matsys_controls',
+		'vgui2/src',
+		'vgui2/vgui_controls',
+		'vgui2/vgui_surfacelib',
+		'vguimatsurface',
+		'vphysics',
+		'vpklib',
+		'vstdlib',
+		'vtf'
 	]
 }
 
@@ -179,6 +218,7 @@ def run_test(self, fragment, msg):
 def define_platform(conf):
 	conf.env.DEDICATED = conf.options.DEDICATED
 	conf.env.TESTS = conf.options.TESTS
+	conf.env.HAMMER = conf.options.HAMMER
 	conf.env.TOGLES = conf.options.TOGLES
 	conf.env.GL = conf.options.GL and not conf.options.TESTS and not conf.options.DEDICATED
 	conf.env.OPUS = conf.options.OPUS
@@ -293,6 +333,9 @@ def options(opt):
 
 	grp.add_option('--tests', action = 'store_true', dest = 'TESTS', default = False,
 		help = 'build unit tests [default: %default]')
+
+	grp.add_option('--hammer', action = 'store_true', dest = 'HAMMER', default = False,
+		help = 'build hammer editor [default: %default]')
 
 	grp.add_option('-D', '--debug-engine', action = 'store_true', dest = 'DEBUG_ENGINE', default = False,
 		help = 'build with -DDEBUG [default: %default]')
@@ -467,6 +510,7 @@ def configure(conf):
 	if conf.env.DEST_OS == 'win32':
 		projects['game'] += ['utils/bzip2']
 		projects['dedicated'] += ['utils/bzip2']
+		projects['hammer'] += ['utils/bzip2']
 	if conf.options.OPUS or conf.env.DEST_OS == 'android':
 		projects['game'] += ['engine/voice_codecs/opus']
 
@@ -621,6 +665,8 @@ def configure(conf):
 		conf.add_subproject(projects['tests'])
 	elif conf.options.DEDICATED:
 		conf.add_subproject(projects['dedicated'])
+	elif conf.options.HAMMER:
+		conf.add_subproject(projects['hammer'])
 	else:
 		conf.add_subproject(projects['game'])
 
@@ -635,6 +681,7 @@ def build(bld):
 	if bld.env.DEST_OS == 'win32':
 		projects['game'] += ['utils/bzip2']
 		projects['dedicated'] += ['utils/bzip2']
+		projects['hammer'] += ['utils/bzip2']
 
 	if bld.env.OPUS or bld.env.DEST_OS == 'android':
 		projects['game'] += ['engine/voice_codecs/opus']
@@ -643,6 +690,8 @@ def build(bld):
 		bld.add_subproject(projects['tests'])
 	elif bld.env.DEDICATED:
 		bld.add_subproject(projects['dedicated'])
+	elif bld.env.HAMMER:
+		bld.add_subproject(projects['hammer'])
 	else:
 		if bld.env.TOGLES:
 			projects['game'] += ['togles']
