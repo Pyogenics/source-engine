@@ -58,7 +58,7 @@ bool GetPersistentEnvironmentVariable( const char *pName, char *pReturn, int siz
 void SetPersistentEnvironmentVariable( const char *pName, const char *pValue )
 {
 	HKEY hregkey; 
-	DWORD dwReturnValue = 0;
+	PDWORD_PTR dwReturnValue = 0;
 
 	// Changed from HKEY_LOCAL_MACHINE to HKEY_CURRENT_USER
 	if ( RegOpenKeyEx( HKEY_CURRENT_USER, VPROJECT_REG_KEY, 0, KEY_ALL_ACCESS, &hregkey ) != ERROR_SUCCESS )
@@ -68,7 +68,7 @@ void SetPersistentEnvironmentVariable( const char *pName, const char *pValue )
 	RegSetValueEx( hregkey, pName, 0, REG_SZ, (const unsigned char *)pValue, (int) strlen(pValue) );
 	
 	// Propagate changes so that environment variables takes immediate effect!
-	SendMessageTimeout( HWND_BROADCAST, WM_SETTINGCHANGE, 0, (LPARAM) "Environment", SMTO_ABORTIFHUNG, 5000, &dwReturnValue );
+	SendMessageTimeout( HWND_BROADCAST, WM_SETTINGCHANGE, 0, (LPARAM) "Environment", SMTO_ABORTIFHUNG, 5000, dwReturnValue );
 
 	// Close the key
 	RegCloseKey( hregkey );

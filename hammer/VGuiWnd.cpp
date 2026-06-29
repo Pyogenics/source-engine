@@ -189,7 +189,7 @@ void CVGuiWnd::DrawVGuiPanel()
 	m_bIsDrawing = false;
 }
 
-LRESULT CVGuiWnd::WindowProcVGui( UINT uMsg, WPARAM wParam, LPARAM lParam )
+long CVGuiWnd::WindowProcVGui( UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
 	switch(uMsg)
 	{
