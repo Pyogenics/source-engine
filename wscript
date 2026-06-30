@@ -187,6 +187,7 @@ projects={
 		'vtf'
 	],
 	'utils': [
+		'appframework',
 		'mathlib',
 		'tier0',
 		'tier1',
@@ -194,6 +195,7 @@ projects={
 		'tier3',
 		'utils/bsppack',
 		'utils/bspzip',
+		'utils/captioncompiler',
 		'utils/lzma',
 		'vstdlib'
 	]
