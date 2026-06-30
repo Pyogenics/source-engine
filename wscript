@@ -682,6 +682,8 @@ def configure(conf):
 		conf.add_subproject(projects['dedicated'])
 	elif conf.options.HAMMER:
 		conf.add_subproject(projects['hammer'])
+	elif conf.options.UTILS:
+		conf.add_subproject(projects['utils'])
 	else:
 		conf.add_subproject(projects['game'])
 
