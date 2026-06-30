@@ -185,6 +185,17 @@ projects={
 		'vpklib',
 		'vstdlib',
 		'vtf'
+	],
+	'utils': [
+		'mathlib',
+		'tier0',
+		'tier1',
+		'tier2',
+		'tier3',
+		'utils/bsppack',
+		'utils/bspzip',
+		'utils/lzma',
+		'vstdlib'
 	]
 }
 
@@ -219,6 +230,7 @@ def define_platform(conf):
 	conf.env.DEDICATED = conf.options.DEDICATED
 	conf.env.TESTS = conf.options.TESTS
 	conf.env.HAMMER = conf.options.HAMMER
+	conf.env.UTILS = conf.options.UTILS
 	conf.env.TOGLES = conf.options.TOGLES
 	conf.env.GL = conf.options.GL and not conf.options.TESTS and not conf.options.DEDICATED
 	conf.env.OPUS = conf.options.OPUS
@@ -336,6 +348,9 @@ def options(opt):
 
 	grp.add_option('--hammer', action = 'store_true', dest = 'HAMMER', default = False,
 		help = 'build hammer editor [default: %default]')
+
+	grp.add_option('--utils', action = 'store_true', dest = 'UTILS', default = False,
+		help = 'build utils [default: %default]')
 
 	grp.add_option('-D', '--debug-engine', action = 'store_true', dest = 'DEBUG_ENGINE', default = False,
 		help = 'build with -DDEBUG [default: %default]')
@@ -692,6 +707,8 @@ def build(bld):
 		bld.add_subproject(projects['dedicated'])
 	elif bld.env.HAMMER:
 		bld.add_subproject(projects['hammer'])
+	elif bld.env.UTILS:
+		bld.add_subproject(projects['utils'])
 	else:
 		if bld.env.TOGLES:
 			projects['game'] += ['togles']
