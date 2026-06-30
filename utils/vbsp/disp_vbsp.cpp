@@ -13,7 +13,8 @@
 #include "mstristrip.h"
 #include "writebsp.h"
 #include "pacifier.h"
-#include "disp_ivp.h"
+// #include "disp_ivp.h" // XXX: this is referenced, unused and doesn't exist? Might be where the CVBPSTesselateHelper lived
+#include "disp_tesselate.h"
 #include "builddisp.h"
 #include "mathlib/vector.h"
 
@@ -406,6 +407,31 @@ void ExportAllowedVertLists( CCoreDispInfo **ppListBase, ddispinfo_t *pBSPDispIn
 		ExportCoreDispAllowedVertList( ppListBase[i], &pBSPDispInfos[i] );
 	}
 }
+
+// Pyogenics: Borrowed this from Hammer, for some reason the vbsp original code doesn't exist anywhere?
+//			  This might have lived inside of disp_ivp.h, could move it there or leave it here.
+class CVBSPTesselateHelper : public CBaseTesselateHelper
+{
+public:
+
+	void EndTriangle()
+	{
+		m_pIndices->AddToTail( m_TempIndices[0] );
+		m_pIndices->AddToTail( m_TempIndices[1] );
+		m_pIndices->AddToTail( m_TempIndices[2] );
+	}
+
+	DispNodeInfo_t& GetNodeInfo( int iNodeBit )
+	{
+		// Hammer doesn't care about these. Give it back something to play with.
+		static DispNodeInfo_t dummy;
+		return dummy;
+	}
+	
+public:
+
+	CUtlVector<unsigned short> *m_pIndices;
+};
 
 bool FindEnclosingTri( 
 	const Vector2D &vert,

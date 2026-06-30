@@ -188,6 +188,8 @@ projects={
 	],
 	'utils': [
 		'appframework',
+		'bitmap',
+		'fgdlib',
 		'mathlib',
 		'tier0',
 		'tier1',
@@ -197,7 +199,9 @@ projects={
 		'utils/bspzip',
 		'utils/captioncompiler',
 		'utils/lzma',
-		'vstdlib'
+		'utils/vbsp',
+		'vstdlib',
+		'vtf'
 	]
 }
 
